@@ -20,39 +20,6 @@ int PORT = 8080;
 
 
 
-
-Sigfunc *bind_signal2func(int signo, Sigfunc *func)
-{
-    struct sigaction act, oact;
-    act.sa_handler = func;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    if (signo == SIGALRM)
-    {
-#ifdef SA_INTERRUPT
-        act.sa_flags |= SA_INTERRUPT; /* SunOS 4.x */
-#endif
-    }
-    else
-    {
-#ifdef SA_RESTART
-        act.sa_flags |= SA_RESTART; /* SVR4, 4.4BSD */
-#endif
-    }
-    if (sigaction(signo, &act, &oact) < 0)
-        return (SIG_ERR);
-    return (oact.sa_handler);
-}
-
-void sigChld_handler(int signo)
-{
-    pid_t child_pid;
-    int child_stat;
-    while((child_pid = waitpid(-1,&child_stat,WNOHANG)) < 0);
-    printf("child %d terminated!\n", child_pid);
-}
-
-
 int main()
 {
     int server_fd;
@@ -60,7 +27,7 @@ int main()
     int addrlen = sizeof(address);
     char buffer[BUFFER_SIZE] = {0};
     char *response = (char*)malloc(64);
-    bind_signal2func(SIGCHLD,sigChld_handler);
+
 
     fd_set read_fds;
     int *clients_list = malloc(max_clients*sizeof(int));
