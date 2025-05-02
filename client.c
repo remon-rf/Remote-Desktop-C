@@ -61,7 +61,7 @@ int main()
         }
         if (FD_ISSET(STDIN_FILENO,&read_fds)) /// process stdin content
         {
-            scanf("%s",message);
+            fgets(message,64,stdin);
             if (strcmp(message,"quit")==0)
             {
                 printf("quitting, goodbye!\n");
@@ -86,8 +86,8 @@ int main()
             }
             else
             {
-                //buffer[bytes_read] = '\0';  // Null-terminate the buffer to make it a valid string
-                printf("Received from server: %s\n", buffer);
+                
+                printf("%s",buffer);
             }
         }
 

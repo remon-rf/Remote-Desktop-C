@@ -9,6 +9,8 @@
 #include <signal.h>
 #include <wait.h>
 
+#include "desktop_functions.c"
+
 #define BUFFER_SIZE 1024
 int max_clients = 1;
 typedef void(Sigfunc)(int);
@@ -139,16 +141,10 @@ int main()
                 else
                 {
 
-                    printf("Received from client %d: %s\n",i, buffer);
-                    if(buffer[0]>='0' && buffer[0]<='9'){
-                        for(int j=0; j<buffer[0]-'0'; j++){
-                            send(client_fd, buffer, strlen(buffer), 0);
-                            usleep(1000);
-                        }
-                    }
+                    printf("Received command: %s\n", buffer);
 
-                    send(client_fd, buffer, strlen(buffer), 0);
-                    printf("echo sent to client\n");
+                    handle_command(client_fd,buffer);
+
                 }
             }
         }
